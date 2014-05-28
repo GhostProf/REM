@@ -1,4 +1,4 @@
-##Doin' It: A Style Guide for Templating REM Entries 
+##A Style Guide for Templating REM Entries 
 
 This is a full list of all stylistic preferences to be used while Templating Entries for the Routledge Encyclopedia of Modernism. This list is apt to change and be updated often, so keep tabs on it, if you can. As we progress through the summer, more questions will arise, and the answers to these questions will be posted here. For additional information, you can check out the "Routledge Encyclopedia of Modernism Template Guidelines" document, which is included in each editor's GitHub folder. This StyleGuide, then, gives further and more specific information on which guidelines and stylistic formats to follow when templating. Enjoy! Feel free to add to this list, but please do include your initials and the date beside your contributions to the list. 
 
