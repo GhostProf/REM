@@ -1,6 +1,8 @@
 import argparse
 import os
 import csv
+from sys import platform
+import re
 
 ####################################
 # This script is designed to read the first two columns of a csv file.
@@ -12,6 +14,35 @@ import csv
 # Copyright 2015 Mike Poirier, poirier.mike@live.com
 
 
+# Will recursively check directories (including the target) for the specified words contained within "work"
+def recursive_check(target, work, loc=""):
+    words = re.split("_|-|,| ", work)
+    global path_sep
+    path = path = loc + path_sep + target
+    match = True
+    # Check if the target matches the work name
+    #print words
+    for word in words:
+        if word not in target.lower():
+            match = False
+    # If it matches, return true
+    if match:
+        print "'" + work + "'" + " found in " + "'" + path + "'"
+        return True
+    # If the target is a directory, check it
+    if os.path.isdir(path):
+        #print "recursively checking" + path
+        contents = os.listdir(path)
+        for content in contents:
+            if recursive_check(content, work, path):
+                return True
+    return False
+
+path_sep = "/"
+# Get operating system
+if "windows" in platform:
+    path_sep = "\\"
+
 # Handles the command line arguments passed in. 
 parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--file', dest='file', type=str, required=True, action='store', help='CSV file to parse.')
@@ -19,6 +50,10 @@ parser.add_argument('-t', '--target', dest='path', type=str, action='store', req
 parser.add_argument('-o', '--output', dest='output', default='output.txt', type=str, action='store', help='File you want to output the results.')
 parser.add_argument('-d', '--delemiter', dest='delimiter', default='\t', type=str, action='store', help='Separator in your csv file. Defaults to a tab.')
 args = parser.parse_args()
+
+# Clear the file
+with open(args.output, "w") as f:
+    pass
 
 # Checks to see if the file name provided exists
 if not os.path.isfile(args.file):
@@ -51,15 +86,11 @@ for i in range(len(items)):
 for key in author.keys():
     works = author[key]
     for work in works:
-        words = work.split("_,- ")
-
         for item in items:
-            match = True
-            for word in words:
-                if word not in item.lower():
-                    match = False
-            if match:
+            #print ("Checking: " + item + " for '" + work + "'")
+            if recursive_check(item, work, args.path):
                 with open(args.output, "a") as f:
-                    f.write(key + ": " + item)
+                    f.write(key + ": " + item + "\n")
 
+print "Search complete. Outputting results to " + str(args.output)
 
